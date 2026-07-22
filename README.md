@@ -46,7 +46,7 @@ ESP32-C6 + TMC2130 stepper + LD2410 radar + ToF sensor. Automated pet door with 
 ### 🔌 [USB-C PD LED Controller PCB V2](https://github.com/Hydr0neFN/LightController)
 **Full KiCad design-to-bringup**
 
-CH224K + AP63205 + ESP32-C3. Salvaged a reversed footprint via firmware GPIO remap instead of respin.
+CH224K + AP63205 + ESP32-C3. Control the LED strips via Smart Home ecosystem.
 
 </td>
 </tr>
@@ -96,7 +96,7 @@ Cross-continent Home Assistant + UniFi deployment (Taiwan ↔ Groningen), runnin
 |---|---|
 | [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | ESP32 CYD touchscreen — PC stats, lighting, media control |
 | [CO2](https://github.com/Hydr0neFN/CO2) | NeoPixel desk lamp + SCD41 CO₂ + BME280, HomeKit-native |
-| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2: LD2410B presence → HomeKit, Sonoff Dual R3 relay |
+| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2: LD2410B presence → HomeKit + Relay |
 | [tourplan](https://github.com/Hydr0neFN/tourplan) | Self-hosted group trip date picker for friends |
 | [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | Real-time YouTube subtitle translator (DeepL + Google) |
 
