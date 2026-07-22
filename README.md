@@ -35,7 +35,7 @@ ESP32-C6 + TMC2130 stepper + LD2410 radar + ToF sensor. Automated pet door with 
 </td>
 <td width="50%">
 
-### 🔌 USB-C PD LED Controller PCB V2
+### 🔌 [USB-C PD LED Controller PCB V2](https://github.com/Hydr0neFN/LightController)
 **Full KiCad design-to-bringup**
 
 CH224K + AP63205 + ESP32-C3. Salvaged a reversed footprint via firmware GPIO remap instead of respin.
