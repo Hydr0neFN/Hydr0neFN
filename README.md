@@ -1,4 +1,4 @@
-**English** | [繁體中文](README_zh-TW.md)
+**English** · [繁體中文](README.zh-TW.md)
 
 # Hey, I'm Yu-I 👋
 
