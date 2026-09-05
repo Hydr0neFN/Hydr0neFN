@@ -13,7 +13,7 @@ AI 是我的能力放大器與思考夥伴，每日學習最新的技術與 AI �
 → **[claude-bridges](https://github.com/Hydr0neFN/claude-bridges)** — 完整架構與工具鏈。
 
 <!-- LIVE_STATS:START -->
-> **即時數據** · 更新於 2026-09-04 17:15 ET · *由 RPi cron 自動產生*
+> **即時數據** · 更新於 2026-09-04 17:15 ET · *自動產生*
 >
 > | | Trader (Alpaca 模擬) | DOWTrade (MYM 模擬) |
 > |---|---|---|
@@ -54,7 +54,7 @@ CH224K + AP63205 + ESP32-C3。可使用智慧家庭生態控制燈條。
 <td width="50%">
 
 ### 🤖 [多模型 LLM 交易機器人](https://github.com/Hydr0neFN/trader)
-**跑在 RPi 4B · 模擬交易**
+**自託管 · 模擬交易**
 
 Gemini 分析 → HuggingFace 觀點分析 → Claude 風控閘門 → Alpaca 模擬下單。每 30 分鐘掃 30 支大型股，trailing stop + AI 出場。
 
@@ -90,7 +90,7 @@ ESP8266 + CC1101 868 MHz → 嗅探水表/通風系統專有 RF 訊號 / 讀取�
 
 ## 🏠 智慧家庭 & IoT
 
-跨洲 Home Assistant + UniFi 部署（台灣 ↔ Groningen），全跑在一台 RPi 4B + Docker + Cloudflare Tunnel。
+跨洲多站點 Home Assistant + UniFi 部署，自託管於單板電腦 + Docker。
 
 | 專案 | 技術棧 |
 |---|---|
@@ -114,4 +114,4 @@ APCS 檢定通過 · VOL-VCA（荷蘭主管級安全證照，10年效期） · I
 
 ---
 
-*所有東西都跑在一台 Raspberry Pi 4B 上 — 有一台 $35 的電腦幹嘛付雲端的錢。*
+*幾乎全部自託管於一台單板電腦 — 有一台 $35 的機器能跑，幹嘛付雲端的錢。*
