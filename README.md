@@ -37,10 +37,15 @@ device that pings back can still be unable to serve a connection. "It responds" 
 sufficient evidence, and I had been treating it as if it were.
 
 Three confident explanations died with evidence: slot contention, connection churn, and a
-power sag — that last one excluded by measuring 3.29 V standing on the 3V3 rail. So did
-heap starvation, and by the cleanest argument available: the crash happened at 6816 B
-free — **squarely inside the 6.2–6.9 kB band the device had just run 12.8 hours straight
-in.** A device does not run out of memory at a level it has just proved it survives. The cause was a second API client opening a handshake
+power sag — that last one excluded by measuring 3.29 V standing on the 3V3 rail. The
+trigger is now settled: zero crashes in 23 hours, three in three minutes the moment a
+second API client was armed, none after it stopped.
+
+The part I got wrong is the part worth reading. I wrote that heap was excluded, on the
+strength of a logged line showing 11.6 kB contiguous at the crash. That line is not a
+snapshot — the recorder pairs a fresh reading with a stale one — so **the number I needed
+was never actually measured.** The trigger stands; the mechanism is open, and it is
+written up that way. The cause was a second API client opening a handshake
 while one was already attached — `reset_reason` came back as `Exception`, a firmware fault
 rather than a watchdog bite or a brownout.
 
