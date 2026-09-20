@@ -3,14 +3,159 @@
 # Hey, I'm Yu-I 👋
 
 Y1 Electrical Engineering @ [Hanze University of Applied Sciences](https://www.hanze.nl/), Groningen 🇳🇱
+**VOL-VCA** (Dutch supervisor-level safety) · APCS · IELTS 7.0 / C1
 
-Taiwanese maker who builds embedded systems, designs PCBs, and runs AI trading bots on a Raspberry Pi.
-I use AI as an ability amplifier and thinking aid, keeping up with tech and AI on a daily basis.
+Taiwanese maker. Embedded firmware, KiCad boards through to bringup, and a small fleet of
+self-hosted services on Raspberry Pis in two countries. Most of what's here started as
+something breaking and me wanting to know exactly why.
 
-### Thinking Loop
+## 🔍 Diagnostic Logs
 
-I use LLMs as structured thinking partners, not just code generators. My workflow chains Claude, Gemini, Copilot, and others as debaters, executors, and reviewers in a multi-model loop with checks and balances.
-→ **[claude-bridges](https://github.com/Hydr0neFN/claude-bridges)** — the full breakdown + tooling.
+A symptom, a measurement that contradicts the obvious explanation, then a root cause.
+These are the repos I'd point at first.
+
+### [Surviving a flaky USB SSD](https://github.com/Hydr0neFN/rpi4-usb-ssd-resilience)
+
+A Pi 4 crashed whenever the desk was bumped. Four things were wrong and only the first was
+obvious: root lived on the removable disk; UAS was bound to an RTL9210B-CG bridge with no
+quirks set; USB3 link power management failed on every boot (`enable of device-initiated U1
+failed`); and there was nothing in the logs to work from.
+
+That fourth one is what the repo is really about. **There was no evidence, and that was
+structural** — the persistent journal was bind-mounted from a directory *on the SSD*, and
+`/var/log` is a 50 MB tmpfs. When the disk dropped, the log of the disk dropping died with it.
+`journalctl --list-boots` showed a single boot. Months of crashes, zero forensics.
+
+Recovery is now automatic in 22 seconds. Proving that it worked turned up three more bugs,
+two of which would have left the machine dead and unreachable.
+
+### [Basil grow box](https://github.com/Hydr0neFN/basil-growbox)
+
+An ESP8266 resetting several times an hour — while **ping kept answering in 1–2 ms through
+every failure.** ICMP is answered by lwIP rather than by the sketch's main loop, so a
+device that pings back can still be unable to serve a connection. "It responds" was never
+sufficient evidence, and I had been treating it as if it were.
+
+Three confident explanations died with evidence: slot contention, connection churn, and a
+power sag — that last one excluded by measuring 3.29 V standing on the 3V3 rail. So did
+heap starvation, and by the cleanest argument available: the crash happened at 6816 B
+free — **squarely inside the 6.2–6.9 kB band the device had just run 12.8 hours straight
+in.** A device does not run out of memory at a level it has just proved it survives. The cause was a second API client opening a handshake
+while one was already attached — `reset_reason` came back as `Exception`, a firmware fault
+rather than a watchdog bite or a brownout.
+
+Instrumenting the device cost ~655 B against 3–4 kB of free heap — close to a fifth of the
+headroom. Measuring the edge moved the edge.
+
+### [The Dead Quarter](https://github.com/Hydr0neFN/ili9341-dead-quarter)
+
+A quarter of a cheap 2.8" ILI9341 panel never updates, and every on-screen self-test still
+reports **PASS** — because the test draws into the region it then reads back.
+
+The demo is two PlatformIO builds from **one source file on one board**, one broken and one
+correct, which isolates the difference to the build configuration rather than to the panel,
+the wiring or the library version.
+
+### [Does a static IP actually lower your ping?](https://github.com/Hydr0neFN/hinet-dual-path-probe)
+
+Two ISP account types on one physical line in Taiwan, measured concurrently from a Pi on
+that line, on the **UDP path a Source 2 game actually uses** rather than a convenient nearby
+DNS server.
+
+The answer is no, and also yes. Median game ping is **identical** between the two accounts.
+The entire difference is in the tail: one sample in six spikes past 60 ms on the dynamic
+account, against one in 868 on the fixed one. The probe refreshes the published data hourly.
+
+## ⚡ Embedded & Mechatronics
+
+<table>
+<tr>
+<td width="50%">
+
+### 🐾 [ThermaPaw Smart Pet Door](https://github.com/Hydr0neFN/smart-pet-door)
+**Y1 Capstone · Team Lead**
+
+ESP32-C6 + TMC2130 stepper + LD2410 radar + ToF. A thermally sealed motor-driven door
+replacing a passive flap to cut HVAC loss. Demoed live, with a real dog.
+
+</td>
+<td width="50%">
+
+### 🔌 [USB-C PD LED Controller PCB V2](https://github.com/Hydr0neFN/LightController)
+**Full KiCad design-to-bringup**
+
+CH224K PD sink + AP63205 buck + ESP32-C3. Schematic, layout, fab and bringup, driving LED
+strips from the smart-home stack.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🌬️ [DucoBox Silent RE](https://github.com/Hydr0neFN/Duco)
+**RF reverse engineering · shelved**
+
+ESP8266 + CC1101 at 868 MHz. Captured the ventilation unit's proprietary traffic, then hit
+rotating keys on the join handshake — control was never achieved and the build was retired.
+Kept because the negative result is the useful part.
+
+</td>
+<td width="50%">
+
+### 🌿 [Basil Grow Box](https://github.com/Hydr0neFN/basil-growbox)
+**ESPHome · Home Assistant**
+
+Soil moisture, ultrasonic tank depth, a drain-fault latch and a flood interlock. The foil
+gnat barrier is perforated rather than solid, and the objection that it would seal the soil
+was answered by measurement, not by hoping.
+
+</td>
+</tr>
+</table>
+
+Also: [ReactionTimeDuel](https://github.com/Hydr0neFN/ReactionTimeDuel) — a four-player
+ESP-NOW reaction game with wireless joysticks, selected for the Hanze Open Day.
+
+## 🏠 Smart Home & IoT
+
+Multi-site Home Assistant + UniFi across two continents, self-hosted on single-board
+machines with Docker.
+
+| Project | Stack |
+|---|---|
+| [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | ESP32 CYD touchscreen — PC stats, lighting, media control |
+| [CO2](https://github.com/Hydr0neFN/CO2) | NeoPixel desk lamp + SCD41 CO₂ + BME280, HomeKit-native |
+| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2: LD2410B presence radar → HomeKit + relay |
+| [tourplan](https://github.com/Hydr0neFN/tourplan) | Self-hosted group trip date picker, built for the least tech-savvy relative |
+| [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | Real-time YouTube subtitle translator (DeepL + Google) |
+
+## 🤖 AI Tooling
+
+I use LLMs as structured thinking partners rather than code generators — chained as
+debaters, executors and reviewers, with checks between them. The interesting part isn't the
+prompting, it's the harness around it.
+
+| Project | What it does |
+|---|---|
+| [claude-bridges](https://github.com/Hydr0neFN/claude-bridges) | MCP bridges that let one agent consult others for structured, role-based review |
+| [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | LLM benchmark where answer keys are data, timeouts count as failures, and the limits are written down |
+| [claude-memory-web](https://github.com/Hydr0neFN/claude-memory-web) | Browser UI for a self-hosted memory store — no build step, ETag conflict diffs, git history |
+| [trader](https://github.com/Hydr0neFN/trader) · [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | Two paper-trading bots: multi-model pipelines behind hard-coded Python safety rails, measured against a deterministic control arm |
+
+## 🛠 Tech
+
+**Embedded** · `ESP32` `ESP8266` `Arduino` `PlatformIO` `ESPHome` `KiCad` `RF 868MHz` `MQTT`
+**Software** · `C/C++` `Python` `Flask` `FastAPI` `Docker` `HomeKit`
+**Design & Infra** · `Fusion 360` `3D Printing` `Home Assistant` `UniFi` `Cloudflare`
+
+## 📍 Background
+
+🇹🇼 Taiwan → 🇩🇪 Exchange year Germany '21–'22 → 🇳🇱 Netherlands
+
+## 📊 Appendix — live telemetry
+
+The two trading bots publish their own numbers below. A cron job on the Pi rewrites this
+block on a schedule, so it shows whatever the last run produced.
 
 <!-- LIVE_STATS:START -->
 > **Live Stats** · updated 2026-09-18 17:15 ET · *auto-generated by RPi cron*
@@ -33,89 +178,6 @@ I use LLMs as structured thinking partners, not just code generators. My workflo
 ![Equity Curve](equity_chart.svg)
 
 <!-- LIVE_STATS:END -->
-
-## ⚡ Featured Projects
-
-<table>
-<tr>
-<td width="50%">
-
-### 🐾 [ThermaPaw Smart Pet Door](https://github.com/Hydr0neFN/smart-pet-door)
-**Y1 Capstone · Team Lead**
-
-ESP32-C6 + TMC2130 stepper + LD2410 radar + ToF sensor. Automated pet door with live demo featuring a real dog.
-
-</td>
-<td width="50%">
-
-### 🔌 [USB-C PD LED Controller PCB V2](https://github.com/Hydr0neFN/LightController)
-**Full KiCad design-to-bringup**
-
-CH224K + AP63205 + ESP32-C3. Control the LED strips via Smart Home ecosystem.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🤖 [Multi-LLM Trading Bot](https://github.com/Hydr0neFN/trader)
-**Self-hosted · Paper trading**
-
-Gemini analyst → DeepSeek sentiment (Cloudflare Workers AI fallback) → Claude risk gate → Alpaca paper orders. Scans 49 large-caps every 30 min with trailing stops, a cash guard & AI-driven exits.
-
-</td>
-<td width="50%">
-
-### 📈 [DOWTrade](https://github.com/Hydr0neFN/DOWTrade)
-**MYM Futures · Sim trading**
-
-3-LLM pipeline (Haiku/Gemini/DeepSeek) with hard-coded safety rails, SMA cross filter, sim-fills with pyramid scaling. FastAPI dashboard + LLM-generated daily journal.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🎮 [Reaction Time Duel](https://github.com/Hydr0neFN/ReactionTimeDuel)
-**Selected for Hanze Open Day**
-
-ESP32 + ESP8266 over ESP-NOW, NeoPixel, I2S audio, MPU-6050 motion sensing.
-
-</td>
-<td width="50%">
-
-### 🌬️ [DucoBox Silent RE](https://github.com/Hydr0neFN/Duco)
-**Reverse-engineered RF protocol**
-
-ESP8266 + CC1101 868 MHz → sniffed proprietary RF → Home Assistant integration for ventilation control.
-
-</td>
-</tr>
-</table>
-
-## 🏠 Smart Home & IoT
-
-Multi-site Home Assistant + UniFi deployment across two continents, self-hosted on a single-board computer with Docker.
-
-| Project | Stack |
-|---|---|
-| [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | ESP32 CYD touchscreen — PC stats, lighting, media control |
-| [CO2](https://github.com/Hydr0neFN/CO2) | NeoPixel desk lamp + SCD41 CO₂ + BME280, HomeKit-native |
-| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2: LD2410B presence → HomeKit + Relay |
-| [tourplan](https://github.com/Hydr0neFN/tourplan) | Self-hosted group trip date picker for friends |
-| [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | Real-time YouTube subtitle translator (DeepL + Google) |
-
-## 🛠 Tech
-
-**Embedded** · `ESP32` `ESP8266` `Arduino` `PlatformIO` `ESPHome` `KiCad` `RF 868MHz` `MQTT`
-**Software** · `C/C++` `Python` `Flask` `FastAPI` `Docker` `HomeKit`
-**Design & Infra** · `Fusion 360` `3D Printing` `Home Assistant` `UniFi` `Cloudflare`
-
-## 📍 Background
-
-🇹🇼 Taiwan → 🇩🇪 Exchange year Germany '21–'22 → 🇳🇱 Netherlands
-
-APCS certified · VOL-VCA (Dutch supervisor-level safety, 10yr) · IELTS 7.0/C1
 
 ---
 

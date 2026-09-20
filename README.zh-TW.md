@@ -2,15 +2,161 @@
 
 # 嘿，我是 Yu-I 👋
 
-Hanze 應用科學大學 ([Hanze University of Applied Sciences](https://www.hanze.nl/)) 電機工程大一，Groningen 🇳🇱
+電機工程大一 @ [Hanze 應用科學大學](https://www.hanze.nl/)，Groningen 🇳🇱
+**VOL-VCA**（荷蘭主管級安全證照）· APCS · IELTS 7.0 / C1
 
-來自台灣的 maker，做嵌入式系統、畫 PCB、在 Raspberry Pi 上跑 AI 交易機器人。
-AI 是我的能力放大器與思考夥伴，每日學習最新的技術與 AI 進展。
+台灣 maker。做嵌入式韌體、KiCad 繪板到 bringup，以及橫跨兩國、
+跑在 Raspberry Pi 上的小型自託管服務群。這裡多數的專案，起點都是
+某樣東西壞了，而我想弄清楚到底為什麼。
 
-### 思考迴圈
+## 🔍 診斷日誌
 
-我把 LLM 當結構化思考夥伴，不只是寫 code 的工具。工作流串接 Claude、Gemini、Copilot 等模型，各自擔任辯論者、執行者、審查者，形成多模型互審迴圈。
-→ **[claude-bridges](https://github.com/Hydr0neFN/claude-bridges)** — 完整架構與工具鏈。
+一個症狀、一項推翻表面解釋的量測，接著是根本原因。
+若要了解我，這些儲存庫是我會最先指給你看的。
+
+### [搞定接觸不良的 USB SSD](https://github.com/Hydr0neFN/rpi4-usb-ssd-resilience)
+
+只要桌子被撞到一下，Pi 4 就會當機。問題有四個，而且只有第一個是顯而易見的：
+root 位於抽取式磁碟上；UAS 綁定到未設定 quirks 的 RTL9210B-CG 橋接晶片；
+USB3 鏈結電源管理在每次開機時都失敗（`enable of device-initiated U1
+failed`）；而且日誌裡完全沒有任何線索可供分析。
+
+這第四點正是這個儲存庫的核心所在。**沒有證據，而且這是結構性問題** ——
+持久性 journal 是從 *SSD 上的* 目錄 bind-mount 出來的，而
+`/var/log` 則是 50 MB 的 tmpfs。當磁碟斷線時，記錄斷線的日誌也隨之陪葬。
+`journalctl --list-boots` 只顯示單次開機。幾個月以來的當機，鑑識資料為零。
+
+現在可在 22 秒內自動復原。而為了驗證機制是否奏效，又抓出了三個 bug，
+其中兩個原本足以讓機器徹底癱瘓且無法連線。
+
+### [羅勒種植箱](https://github.com/Hydr0neFN/basil-growbox)
+
+一台 ESP8266 每小時重啟數次 —— 與此同時，**在每一次故障期間 ping 卻始終能在 1–2 ms 內回應。**
+ICMP 是由 lwIP 回應，而非 sketch 的主迴圈，因此能回 ping 的裝置
+依然可能完全無法建立連線。「它有回應」從來就不是充分的證據，
+而我過去卻一直把它當成是。
+
+三種原本信心滿滿的推論在證據面前破滅：slot contention、connection churn 與
+power sag —— 最後一項藉由量測到 3V3 供電軌穩定維持在 3.29 V 而排除。
+heap 耗盡也是如此，而且用的是最乾淨的那個論證：當機時剩餘 6816 B，
+**正好落在它前一刻才連續穩定運作 12.8 小時的 6.2–6.9 kB 區間之內。**
+在一個剛證明過自己撐得住的記憶體水位上當掉，機制就不會是記憶體不足。
+起因是在已有連線的情況下，第二個 API client 又發起了交握 ——
+`reset_reason` 回傳 `Exception`，是韌體層級的錯誤，
+不是 watchdog bite，也不是 brownout。
+
+為裝置加入觀測機制消耗了約 655 B，相對於僅剩 3–4 kB 的可用 heap ——
+佔了裕度將近五分之一。量測極限的同時，也推移了極限。
+
+### [死掉的四分之一](https://github.com/Hydr0neFN/ili9341-dead-quarter)
+
+一片廉價 2.8 吋 ILI9341 面板有四分之一永遠不會更新，但螢幕上的自我測試
+卻全都回報 **PASS** —— 因為測試程式畫進哪個區域，就從哪個區域讀回。
+
+此 demo 以**同一塊板子上的同一份原始碼檔案**產出兩套 PlatformIO 建置，
+一好一壞，將差異精確限縮至建置組態，而非面板、
+接線或函式庫版本。
+
+### [固定 IP 真的能降低 ping 嗎？](https://github.com/Hydr0neFN/hinet-dual-path-probe)
+
+在台灣同一條實體線路上使用兩種 ISP 帳號類型，由該線路上的 Pi 同步量測，
+走的是 **Source 2 遊戲實際使用的 UDP 路徑**，而非隨便挑一個附近方便的
+DNS 伺服器。
+
+答案是不會，但也是會。兩個帳號的遊戲中位數 ping **完全相同**。
+所有的差異全在長尾：浮動 IP 帳號每 6 個取樣點就有一個飆破 60 ms，
+相較之下固定 IP 帳號是 868 個才有一個。探針每小時更新發布的資料。
+
+## ⚡ 嵌入式與機電整合
+
+<table>
+<tr>
+<td width="50%">
+
+### 🐾 [ThermaPaw 智慧寵物門](https://github.com/Hydr0neFN/smart-pet-door)
+**大一 Capstone · 組長**
+
+ESP32-C6 + TMC2130 步進馬達 + LD2410 雷達 + ToF。以具備保溫密封的馬達驅動門
+取代被動門片，減少空調流失。現場實機展示，由真正的狗實測。
+
+</td>
+<td width="50%">
+
+### 🔌 [USB-C PD LED 控制器 PCB V2](https://github.com/Hydr0neFN/LightController)
+**完整 KiCad 設計到 bringup**
+
+CH224K PD sink + AP63205 buck + ESP32-C3。從電路圖、Layout、洗板打樣到 bringup，
+透過智慧家庭系統驅動 LED 燈條。
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🌬️ [DucoBox Silent 逆向工程](https://github.com/Hydr0neFN/Duco)
+**RF 逆向工程 · 已封存**
+
+ESP8266 + CC1101 at 868 MHz。側錄到通風主機的專有流量後，
+在加入程序的交握上撞到輪替金鑰，始終沒能取得控制權，這個版本也就收了。
+留著是因為這個否定的結果才是有用的部分。
+
+</td>
+<td width="50%">
+
+### 🌿 [羅勒種植箱](https://github.com/Hydr0neFN/basil-growbox)
+**ESPHome · Home Assistant**
+
+土壤濕度、超音波水箱液位、排水故障閂鎖與防溢水連鎖。鋁箔防蟲隔離層採用
+打孔而非全密閉設計；而面對「這會把土壤悶死」的質疑，是用實際量測來回答，
+而不是靠一廂情願。
+
+</td>
+</tr>
+</table>
+
+另外還有：[ReactionTimeDuel 瞬時對決](https://github.com/Hydr0neFN/ReactionTimeDuel) —— 四人座配備無線搖桿的
+ESP-NOW 反應速度對決遊戲，入選 Hanze Open Day 展示。
+
+## 🏠 智慧家庭 & IoT
+
+跨越兩大洲的多站點 Home Assistant + UniFi 部署，以 Docker 自託管於
+單板電腦上。
+
+| 專案 | 技術堆疊 |
+|---|---|
+| [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | ESP32 CYD 觸控螢幕 —— 電腦狀態、燈光、媒體控制 |
+| [CO2](https://github.com/Hydr0neFN/CO2) | NeoPixel 檯燈 + SCD41 CO₂ + BME280，原生 HomeKit |
+| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2：LD2410B 人體存在雷達 → HomeKit + 繼電器 |
+| [tourplan](https://github.com/Hydr0neFN/tourplan) | 自託管團體出遊挑日工具，專為最不諳 3C 的親戚量身打造 |
+| [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | 即時 YouTube 字幕翻譯器（DeepL + Google） |
+
+## 🤖 AI 工具鏈
+
+我將 LLM 當成結構化思考夥伴，而非僅僅是程式碼產生器 —— 串接為
+辯論者、執行者與審查者，並在彼此之間設置檢驗機制。真正有趣的並非提示詞
+（prompting），而是圍繞在外的 harness。
+
+| 專案 | 功能說明 |
+|---|---|
+| [claude-bridges](https://github.com/Hydr0neFN/claude-bridges) | 讓單一 agent 能向其他 agent 諮詢，以進行結構化、依角色分工審查的 MCP 橋接工具 |
+| [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | 一套 LLM 基準測試：標準答案即為資料、逾時一律算作失敗，且各項極限皆有明載 |
+| [claude-memory-web](https://github.com/Hydr0neFN/claude-memory-web) | 自託管記憶庫的瀏覽器 UI —— 無需建置步驟、ETag 衝突 diff、支援 git 歷史紀錄 |
+| [trader](https://github.com/Hydr0neFN/trader) · [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 兩款模擬交易機器人：多模型管線受控於 Python 硬編碼安全護欄，並與確定性對照組進行量測比較 |
+
+## 🛠 技術
+
+**嵌入式** · `ESP32` `ESP8266` `Arduino` `PlatformIO` `ESPHome` `KiCad` `RF 868MHz` `MQTT`
+**軟體** · `C/C++` `Python` `Flask` `FastAPI` `Docker` `HomeKit`
+**設計 & 基礎設施** · `Fusion 360` `3D Printing` `Home Assistant` `UniFi` `Cloudflare`
+
+## 📍 背景
+
+🇹🇼 台灣 → 🇩🇪 德國交換一年 '21–'22 → 🇳🇱 荷蘭
+
+## 📊 附錄 —— 即時遙測
+
+兩款交易機器人會在下方發布各自的運作數字。Pi 上的 cron job 會定期改寫此
+區塊，因此呈現的內容永遠是最新一次執行的結果。
 
 <!-- LIVE_STATS:START -->
 > **即時數據** · 更新於 2026-09-18 17:15 ET · *由 RPi cron 自動產生*
@@ -33,89 +179,6 @@ AI 是我的能力放大器與思考夥伴，每日學習最新的技術與 AI �
 ![權益曲線](equity_chart.svg)
 
 <!-- LIVE_STATS:END -->
-
-## ⚡ 精選專案
-
-<table>
-<tr>
-<td width="50%">
-
-### 🐾 [ThermaPaw 智慧寵物門](https://github.com/Hydr0neFN/smart-pet-door)
-**大一 Capstone · 組長**
-
-ESP32-C6 + TMC2130 步進馬達 + LD2410 雷達 + ToF 感測器。自動寵物門，真的狗勾也會用。
-
-</td>
-<td width="50%">
-
-### 🔌 [USB-C PD LED 控制器 PCB V2](https://github.com/Hydr0neFN/LightController)
-**完整 KiCad 設計到灌軟體上電**
-
-CH224K + AP63205 + ESP32-C3。可使用智慧家庭生態控制燈條。
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🤖 [多模型 LLM 交易機器人](https://github.com/Hydr0neFN/trader)
-**自託管 · 模擬交易**
-
-Gemini 分析 → DeepSeek 觀點分析（Cloudflare Workers AI 後備）→ Claude 風控閘門 → Alpaca 模擬下單。每 30 分鐘掃 49 支大型股，trailing stop、現金防護 + AI 出場。
-
-</td>
-<td width="50%">
-
-### 📈 [DOWTrade](https://github.com/Hydr0neFN/DOWTrade)
-**MYM 期貨 · 模擬交易**
-
-三模型管線 (Haiku/Gemini/DeepSeek)，硬編碼安全護欄、SMA 交叉過濾、金字塔加倉模擬成交。FastAPI 儀表板 + LLM 生成每日交易日誌。
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🎮 [瞬時對決](https://github.com/Hydr0neFN/ReactionTimeDuel)
-**入選 Hanze Open Day 展示**
-
-ESP32 + ESP8266 透過 ESP-NOW 通訊，NeoPixel、I2S 音效、MPU-6050 動作感測。先按者勝。
-
-</td>
-<td width="50%">
-
-### 🌬️ [DucoBox Silent 逆向工程](https://github.com/Hydr0neFN/Duco)
-**逆向 RF 協定**
-
-ESP8266 + CC1101 868 MHz → 嗅探水表/通風系統專有 RF 訊號 / 讀取全屋使用瓦數
-
-</td>
-</tr>
-</table>
-
-## 🏠 智慧家庭 & IoT
-
-跨洲多站點 Home Assistant + UniFi 部署，自託管於單板電腦 + Docker。
-
-| 專案 | 技術棧 |
-|---|---|
-| [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | ESP32 CYD 觸控螢幕 — 電腦數據、燈控、媒體控制 |
-| [CO2](https://github.com/Hydr0neFN/CO2) | NeoPixel 檯燈 + SCD41 CO₂ + BME280，原生 HomeKit |
-| [Kitchen](https://github.com/Hydr0neFN/Kitchen) | ESP8266 × 2：LD2410B 存在偵測 → HomeKit + 繼電器 |
-| [tourplan](https://github.com/Hydr0neFN/tourplan) | 自架旅行日期投票工具，給朋友用 |
-| [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | 即時 YouTube 字幕翻譯器（DeepL + Google） |
-
-## 🛠 技術
-
-**嵌入式** · `ESP32` `ESP8266` `Arduino` `PlatformIO` `ESPHome` `KiCad` `RF 868MHz` `MQTT`
-**軟體** · `C/C++` `Python` `Flask` `FastAPI` `Docker` `HomeKit`
-**設計 & 基礎設施** · `Fusion 360` `3D Printing` `Home Assistant` `UniFi` `Cloudflare`
-
-## 📍 背景
-
-🇹🇼 台灣 → 🇩🇪 德國交換一年 '21–'22 → 🇳🇱 荷蘭
-
-APCS 檢定通過 · VOL-VCA（荷蘭主管級安全證照，10年效期） · IELTS 7.0/C1
 
 ---
 
