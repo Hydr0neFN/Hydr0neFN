@@ -61,7 +61,7 @@ CH224K + AP63205 + ESP32-C3。可使用智慧家庭生態控制燈條。
 ### 🤖 [多模型 LLM 交易機器人](https://github.com/Hydr0neFN/trader)
 **自託管 · 模擬交易**
 
-Gemini 分析 → HuggingFace 觀點分析 → Claude 風控閘門 → Alpaca 模擬下單。每 30 分鐘掃 30 支大型股，trailing stop + AI 出場。
+Gemini 分析 → DeepSeek 觀點分析（Cloudflare Workers AI 後備）→ Claude 風控閘門 → Alpaca 模擬下單。每 30 分鐘掃 49 支大型股，trailing stop、現金防護 + AI 出場。
 
 </td>
 <td width="50%">

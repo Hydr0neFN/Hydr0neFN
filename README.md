@@ -61,7 +61,7 @@ CH224K + AP63205 + ESP32-C3. Control the LED strips via Smart Home ecosystem.
 ### 🤖 [Multi-LLM Trading Bot](https://github.com/Hydr0neFN/trader)
 **Self-hosted · Paper trading**
 
-Gemini analyst → HuggingFace sentiment → Claude risk gate → Alpaca paper orders. Scans 30 large-caps every 30 min with trailing stops & AI-driven exits.
+Gemini analyst → DeepSeek sentiment (Cloudflare Workers AI fallback) → Claude risk gate → Alpaca paper orders. Scans 49 large-caps every 30 min with trailing stops, a cash guard & AI-driven exits.
 
 </td>
 <td width="50%">
