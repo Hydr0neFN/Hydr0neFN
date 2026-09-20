@@ -1,0 +1,14 @@
+# Generator + its logs live only on the Pi; git_push() stages README.md,
+# README.zh-TW.md and equity_chart.svg by name, so nothing here was ever at
+# risk of being committed -- this just keeps git status readable.
+update_stats.py
+update.log
+
+# Timestamped backups (name.py.bak.YYYYMMDD_HHMMSS)
+*.bak
+*.bak.*
+*.bak2.*
+*.bak-*
+
+__pycache__/
+*.py[cod]
