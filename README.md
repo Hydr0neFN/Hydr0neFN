@@ -111,8 +111,8 @@ Kept because the negative result is the useful part.
 **ESPHome · Home Assistant**
 
 Soil moisture, ultrasonic tank depth, a drain-fault latch and a flood interlock. The foil
-gnat barrier is perforated rather than solid, and the objection that it would seal the soil
-was answered by measurement, not by hoping.
+gnat barrier is perforated rather than solid; whether the soil still dries under it is being
+checked against the logged soil voltage, not assumed.
 
 </td>
 </tr>
