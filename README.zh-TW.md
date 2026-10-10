@@ -145,7 +145,8 @@ ESP-NOW 反應速度對決遊戲，入選 Hanze Open Day 展示。
 | [claude-bridges](https://github.com/Hydr0neFN/claude-bridges) | 讓單一 agent 能向其他 agent 諮詢，以進行結構化、依角色分工審查的 MCP 橋接工具 |
 | [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | 一套 LLM 基準測試：標準答案即為資料、逾時一律算作失敗，且各項極限皆有明載 |
 | [claude-memory-web](https://github.com/Hydr0neFN/claude-memory-web) | 自託管記憶庫的瀏覽器 UI —— 無需建置步驟、ETag 衝突 diff、支援 git 歷史紀錄 |
-| [trader](https://github.com/Hydr0neFN/trader) · [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 兩款模擬交易機器人：多模型管線受控於 Python 硬編碼安全護欄，並與確定性對照組進行量測比較 |
+| [trader](https://github.com/Hydr0neFN/trader) · **已於 2026-10-10 退役** | 模擬交易機器人：多模型管線受控於 Python 硬編碼安全護欄。半年報酬 +7.06%，同期 SPY +12.68%；alpha t=0.35 — [已退役，完整檢討見儲存庫](https://github.com/Hydr0neFN/trader) |
+| [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 模擬交易機器人：多模型管線受控於 Python 硬編碼安全護欄，並與確定性對照組進行量測比較 — 持續運行中 |
 
 ## 🛠 技術
 
@@ -159,22 +160,20 @@ ESP-NOW 反應速度對決遊戲，入選 Hanze Open Day 展示。
 
 ## 📊 附錄 —— 即時遙測
 
-兩款交易機器人會在下方發布各自的運作數字。Pi 上的 cron job 會定期改寫此
-區塊，因此呈現的內容永遠是最新一次執行的結果。
+DOWTrade 會在下方發布自己的運作數字；trader 已退役，顯示的是其最終快照。
+Pi 上的 cron job 會定期改寫此區塊，因此呈現的內容永遠是最新一次執行的結果。
 
 <!-- LIVE_STATS:START -->
-> **即時數據** · 更新於 2026-10-09 17:15 ET · *由 RPi cron 自動產生*
+> **即時數據** · 更新於 2026-10-10 12:56 ET · *由 RPi cron 自動產生*
 >
-> | | Trader (Alpaca 模擬) | DOWTrade (MYM 模擬) |
+> | | Trader (Alpaca 模擬)<br>已於 2026-10-10 退役（最終） | DOWTrade (MYM 模擬) |
 > |---|---|---|
-> | 淨值 | $107,023.67 | $1,001,147.40 |
-> | 報酬率 | +7.02% | +4.59% |
+> | 淨值 | $107,064.60 | $1,001,147.40 |
+> | 報酬率 | +7.06%（SPY +12.68%） | +4.59% |
 > | 淨損益 | — | $+1,147.40 |
-> | 持倉 | 24/24 | 空倉 |
-> | 當日損益 | $+744.52 | — |
+> | 持倉 | 24（已凍結，未平倉） | 空倉 |
+> | 當日損益 | — | — |
 > | 總交易次數 | — | 106 |
-> | 漲幅前三 | ACN +6.6%, TSLA +6.7%, MSFT +6.2% | |
-> | 跌幅前三 | TXN -0.6%, MRK -0.3%, META +0.1% | |
 >
 > DOWTrade 報酬率以 $25,000 風險資本計算，而非模擬帳戶的 $1M 券商預設值 — 每筆風險預算僅 $250，對一百萬報價沒有意義。
 > 對照組：同一批 15m bar、同樣的 2×ATR 停損與部位大小，只把 LLM 決策換成 EMA(9/21) 交叉 → **$-3,683.20 / 247 筆**（勝率 25.1%，平均 -0.034R）。把 LLM 版本用**同一套成本模型**重算（每筆一跳逆向滑價 + 手續費）為 **$+700.40 / 109 筆**。上表的淨損益是歷史帳載值，未含成本模型 — 成本模型自 2026-09-09 起才對新倉位生效。
