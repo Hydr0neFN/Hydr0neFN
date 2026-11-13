@@ -42,7 +42,7 @@
 | [ReactionTimeDuel](https://github.com/Hydr0neFN/ReactionTimeDuel) | 四人反應速度對戰遊戲，用 ESP-NOW 連無線搖桿。 | 入選 Hanze Open Day 展出。 |
 | [wholeTest](https://github.com/Hydr0neFN/wholeTest) | ReactionTimeDuel 的硬體整合測試：螢幕、主控 MCU、搖桿連線，組裝前先測。 | 每個部分先單獨驗過。 |
 | [Duco](https://github.com/Hydr0neFN/Duco) | 用 ESP8266 + CC1101 逆向一台通風主機的 868 MHz 訊號。 | 訊號有錄到，卡在加入程序的輪替金鑰，最後收掉。留著是因為「做不到」這個結果本身有用。 |
-| [CAMtest](https://github.com/Hydr0neFN/CAMtest) | 兩顆 ESP32-CAM 做立體視覺，用來瞄準聚光燈。 | 已擱置：實際環境下太不穩。 |
+| [CAMtest](https://github.com/Hydr0neFN/CAMtest) | 兩顆 ESP32-CAM 做立體視覺，用來瞄準聚光燈。 | 已擱置：放到實際環境裡太不穩定。 |
 | [lightbar2mqtt](https://github.com/Hydr0neFN/lightbar2mqtt) | 把小米螢幕掛燈接上 Home Assistant 的 ESP32 / ESP32-C3 橋接器。 | Fork：加了 BME280 + SCD41 感測器、PlatformIO build、OTA，還有連跑幾週後修掉的穩定性問題。 |
 
 ## 家裡和桌上
@@ -53,7 +53,7 @@
 |---|---|
 | [NLDeskCYD](https://github.com/Hydr0neFN/NLDeskCYD) · [PCDeskCYD](https://github.com/Hydr0neFN/PCDeskCYD) | 接 Home Assistant 的 ESP32 觸控面板，LVGL 9 + PlatformIO |
 | [CO2](https://github.com/Hydr0neFN/CO2) · [Kitchen](https://github.com/Hydr0neFN/Kitchen) | CO₂ 檯燈（SCD41、BME280）和 LD2410B 人體雷達，用 ESP-NOW 互連，接進 HomeKit |
-| [JonsPanel](https://github.com/Hydr0neFN/JonsPanel) | 取代 JONSBO PC Monitor 的原生程式；驅動 USB HID 機殼螢幕，CPU 和記憶體用得更少 |
+| [JonsPanel](https://github.com/Hydr0neFN/JonsPanel) | 取代 JONSBO PC Monitor 的原生程式；驅動 USB HID 機殼螢幕，更省 CPU 和記憶體 |
 | [mousecal](https://github.com/Hydr0neFN/mousecal) | 在瀏覽器裡量出滑鼠感測器的旋轉角度並修正 |
 | [id4-tray](https://github.com/Hydr0neFN/id4-tray) | Audient iD4 MKII 的 Windows 系統匣工具：切取樣率和 ASIO buffer 大小 |
 | [tourplan](https://github.com/Hydr0neFN/tourplan) · [tripcompanion-app](https://github.com/Hydr0neFN/tripcompanion-app) | 自架的出遊工具：給最不熟 3C 的親戚也會用的挑日子工具，和手機優先的行程時間軸 |
@@ -67,11 +67,11 @@
 
 | 專案 | 功能 |
 |---|---|
-| [claude-bridges](https://github.com/Hydr0neFN/claude-bridges) | MCP 橋接：讓一個 agent 找其他模型做有結構、分角色的審查 |
-| [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | LLM 基準測試：標準答案當資料管理，逾時就算失敗，限制都寫明 |
+| [claude-bridges](https://github.com/Hydr0neFN/claude-bridges) | MCP 橋接：讓一個 agent 找其他模型，照固定格式、分角色來做審查 |
+| [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | LLM 基準測試：標準答案也當資料來管，逾時就算失敗，限制也都寫明 |
 | [claude-memory-web](https://github.com/Hydr0neFN/claude-memory-web) | 自架記憶庫的瀏覽器介面：免 build、ETag 衝突 diff、git 歷史 |
 | [trader](https://github.com/Hydr0neFN/trader) · 2026-10-10 退役 | 模擬交易機器人：多模型流程外面包一層寫死的 Python 安全護欄。6 個月 +7.06%，同期 SPY +12.68%，alpha t=0.35。已退役，檢討寫在 repo 裡。 |
-| [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 同樣的做法用在期貨上，另外跑一組確定性對照組來比。還在跑，即時數字在下面。 |
+| [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 同樣的做法用在期貨上，另外跑一組純規則（不靠模型）的對照組來比。還在跑，即時數字在下面。 |
 
 ## 常用工具
 
