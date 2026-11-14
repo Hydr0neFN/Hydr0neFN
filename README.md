@@ -59,6 +59,9 @@ Home Assistant and UniFi on two sites in two countries, self-hosted with Docker 
 | [tourplan](https://github.com/Hydr0neFN/tourplan) · [tripcompanion-app](https://github.com/Hydr0neFN/tripcompanion-app) | Self-hosted trip tools: a date picker for the least technical relative, and a phone-first trip timeline |
 | [denba-app](https://github.com/Hydr0neFN/denba-app) | iPad-first PWA for inventory, sales, trials and P&L |
 | [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | Real-time YouTube subtitle translator (DeepL + Google) |
+| [room-presence](https://github.com/Hydr0neFN/room-presence) | Which zone of the room a person is in, from WiFi CSI and BLE phone RSSI on ESP32 anchors, fused in Home Assistant. Measurements and open limits included |
+| [powermon](https://github.com/Hydr0neFN/powermon) | ESP8266 firmware that counts electricity-meter pulses with a photodiode and publishes watts and kWh over MQTT |
+| [mpv-adaptive-enhance](https://github.com/Hydr0neFN/mpv-adaptive-enhance) | mpv setup for Windows that picks, per video, the best picture the GPU can sustain: shaders and frame interpolation |
 
 ## AI tooling, with checks
 

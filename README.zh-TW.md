@@ -59,6 +59,9 @@
 | [tourplan](https://github.com/Hydr0neFN/tourplan) · [tripcompanion-app](https://github.com/Hydr0neFN/tripcompanion-app) | 自架的出遊工具：給最不熟 3C 的親戚也會用的挑日子工具，和手機優先的行程時間軸 |
 | [denba-app](https://github.com/Hydr0neFN/denba-app) | iPad 優先的 PWA：進銷存、試用和損益 |
 | [yt-subtitle-translator](https://github.com/Hydr0neFN/yt-subtitle-translator) | YouTube 字幕即時翻譯（DeepL + Google） |
+| [room-presence](https://github.com/Hydr0neFN/room-presence) | 用 ESP32 錨點的 WiFi CSI 和手機 BLE RSSI 判斷人在房間哪一區，在 Home Assistant 裡融合；量測結果和還沒解決的限制都寫在裡面 |
+| [powermon](https://github.com/Hydr0neFN/powermon) | ESP8266 韌體：用光電二極體數電表脈衝，把瓦數和 kWh 用 MQTT 送出去 |
+| [mpv-adaptive-enhance](https://github.com/Hydr0neFN/mpv-adaptive-enhance) | Windows 上的 mpv 設定：每部影片播放時挑出顯示卡撐得住的最好畫質，含著色器和動態補幀 |
 
 ## AI 工具，每一步都有檢查
 
