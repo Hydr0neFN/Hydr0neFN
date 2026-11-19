@@ -74,7 +74,7 @@
 | [solver-verified-bench](https://github.com/Hydr0neFN/solver-verified-bench) | LLM 基準測試：標準答案也當資料來管，逾時就算失敗，限制也都寫明 |
 | [claude-memory-web](https://github.com/Hydr0neFN/claude-memory-web) | 自架記憶庫的瀏覽器介面：免 build、ETag 衝突 diff、git 歷史 |
 | [trader](https://github.com/Hydr0neFN/trader) · 2026-10-10 退役 | 模擬交易機器人：多模型流程外面包一層寫死的 Python 安全護欄。6 個月 +7.06%，同期 SPY +12.68%，alpha t=0.35。已退役，檢討寫在 repo 裡。 |
-| [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 同樣的做法用在期貨上，另外跑一組純規則（不靠模型）的對照組來比。還在跑，即時數字在下面。 |
+| [DOWTrade](https://github.com/Hydr0neFN/DOWTrade) | 同樣的做法用在期貨上，另外跑一組純規則（不靠模型）的對照組來比。已停止，最終數字在下面。 |
 
 ## 常用工具
 
@@ -82,15 +82,14 @@
 **軟體** · `C/C++` `Python` `JavaScript` `C#` `Flask` `FastAPI` `Docker` `HomeKit`
 **設計與基礎設施** · `Fusion 360` `3D Printing` `Home Assistant` `UniFi` `Cloudflare` `Raspberry Pi`
 
-## 📊 附錄 —— 即時遙測
+## 📊 附錄 —— 最終數字
 
-DOWTrade 會在下方發布自己的運作數字；trader 已退役，顯示的是其最終快照。
-Pi 上的 cron job 會定期改寫此區塊，因此呈現的內容永遠是最新一次執行的結果。
+兩個機器人都已經停了。下面是最後一次的快照，時間是 2026-11-18 17:15 ET。
+Pi 上負責更新的 cron job 已經關掉，這些數字不會再變。
 
-<!-- LIVE_STATS:START -->
-> **即時數據** · 更新於 2026-11-18 17:15 ET · *由 RPi cron 自動產生*
+> **最終快照** · 2026-11-18 17:15 ET · *RPi cron 最後一次執行*
 >
-> | | Trader (Alpaca 模擬)<br>已於 2026-10-10 退役（最終） | DOWTrade (MYM 模擬) |
+> | | Trader (Alpaca 模擬)<br>已於 2026-10-10 退役（最終） | DOWTrade (MYM 模擬)<br>已停止（最終） |
 > |---|---|---|
 > | 淨值 | $107,064.60 | $1,001,027.46 |
 > | 報酬率 | +7.06%（SPY +12.68%） | +4.11% |
@@ -104,8 +103,6 @@ Pi 上的 cron job 會定期改寫此區塊，因此呈現的內容永遠是最�
 > 兩邊樣本都遠不足以達到統計顯著；這是方向，不是結論。
 
 ![權益曲線](equity_chart.svg)
-
-<!-- LIVE_STATS:END -->
 
 ---
 
