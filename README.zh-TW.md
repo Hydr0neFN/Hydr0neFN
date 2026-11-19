@@ -84,7 +84,8 @@
 
 ## 📊 附錄 —— 最終數字
 
-兩個機器人都已經停了。下面是最後一次的快照，時間是 2026-11-18 17:15 ET。
+兩個交易機器人 [trader](https://github.com/Hydr0neFN/trader) 和
+[DOWTrade](https://github.com/Hydr0neFN/DOWTrade) 都已經停了。下面是最後一次的快照，時間是 2026-11-18 17:15 ET。
 Pi 上負責更新的 cron job 已經關掉，這些數字不會再變。
 
 > **最終快照** · 2026-11-18 17:15 ET · *RPi cron 最後一次執行*

@@ -84,7 +84,8 @@ The harness around the model is the interesting part.
 
 ## 📊 Appendix — final numbers
 
-Both bots are stopped. The block below is the last snapshot, from 2026-11-18 17:15 ET.
+Both trading bots, [trader](https://github.com/Hydr0neFN/trader) and
+[DOWTrade](https://github.com/Hydr0neFN/DOWTrade), are stopped. The block below is the last snapshot, from 2026-11-18 17:15 ET.
 The Pi cron job that refreshed it is off, so these numbers do not change.
 
 > **Final snapshot** · 2026-11-18 17:15 ET · *last run of the RPi cron job*
